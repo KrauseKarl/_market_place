@@ -22,9 +22,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '3=mgazhhbe^o3gw3@%@(opk$7i==a^d2no=m0j-zmrl5(i9#(_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['testserver', '127.0.0.1', '.localhost']
+ALLOWED_HOSTS = ['testserver', '127.0.0.1', '.localhost']   # !!!!!!!!!!!!!!!!!!!
 # Application definition
 
 INSTALLED_APPS = [
@@ -35,8 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # third part
-    'debug_toolbar',
+    # # third part
+    # 'debug_toolbar',
 
     # Local
     'app_users.apps.AppUsersConfig',
@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'djmarketplace.urls'
@@ -138,8 +138,8 @@ LOCALE_PATHS = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
-
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
@@ -152,10 +152,10 @@ SHORT_DATE_FORMAT = 'm/a/Y'
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_COOKIE_AGE = 1209600
 
-CSRF_TRUSTED_ORIGINS = ['https://testserver', 'https://127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://testserver', 'https://127.0.0.1']      # !!!!!!!!!!!!!!!!!!!
 
 CART_SESSION_ID = 'cart'
-
-INTERNAL_IPS = ["127.0.0.1", ]
+#
+# INTERNAL_IPS = ["127.0.0.1", ]
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block title %} add cart {% endblock title %}
+
+{% block content %}
+<form action="{% url 'app_cart:detail_cart' product_id=item.id %}" method="post">
+    {{ cart_product_form }}
+    {% csrf_token %}
+    <input type="submit" value="Add to cart">
+</form>
+
+{% endblock content %}

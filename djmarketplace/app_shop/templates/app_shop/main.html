@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load cache %}
+{% get_current_language as LANGUAGE_CODE %}
+{% block title %}{% trans 'main page' %}{% endblock %}
+
+{% block content %}
+
+<div class="container my-5">
+    <div class="row d-flex justify-content-center">
+        <!-- DISCOUNT   -->
+        <div class="col col-3-sm-12  mb-3">
+            <div id="carouselExampleSlidesOnly_1" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <a class="text-decoration-none" href="{% url 'app_shop:discount' %}">
+                        <div class="text-light text-center  fs-4 p-2 fw-bolder rounded bg-danger ">
+                            {% trans 'SALE' %}
+                        </div>
+                    </a>
+                    {% for item in discount_items|slice:'1' %}
+                    <div class="carousel-item active card bg-body p-2 rounded">
+                        <a class="text-decoration-none text-dark"
+                           href="{% url 'app_shop:item_detail' pk=item.pk shop_slug=item.shop.slug %}">
+                            <div class="row ">
+                                <div class="col col-12 ">
+                                    <img class="card-img-top"
+                                         src="{% if item.image %} {{ item.image.url }}
+                                             {% else %}{% static 'img/default_item.jpg' %}  {% endif %}"
+                                         width="150" height="200" alt="image">
+                                </div>
+                                <div class="col col-12 d-flex justify-content-start">{{ item.name }}</div>
+                                <div class="col col-6 fw-lighter d-flex justify-content-end text-decoration-line-through">
+                                    {{ item.price }} {% trans '$' %}
+                                </div>
+                                <div class="col col-6 d-flex fw-bold fs-6 justify-content-end">
+                                    {{ item.get_current_price }} {% trans '$' %}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                    {% for item in discount_items|slice:'2:5' %}
+                    <div class="carousel-item  card bg-body p-2 rounded">
+                        <a class="text-decoration-none text-dark"
+                           href="{% url 'app_shop:item_detail' pk=item.pk shop_slug=item.shop.slug %}">
+                            <div class="row">
+                                <div class="col col-12 ">
+                                    <img class="card-img-top"
+                                         src="{% if item.image %} {{ item.image.url }}
+                                             {% else %}{% static 'img/default_item.jpg' %}  {% endif %}"
+                                         width="150" height="200" alt="image">
+                                </div>
+                                <div class="col col-12 d-flex justify-content-start">{{ item.name }}</div>
+                                <div class="col col-6 fw-lighter d-flex justify-content-start text-decoration-line-through">
+                                    {{ item.price }} {% trans '$' %}
+                                </div>
+                                <div class="col col-6 d-flex fw-bold fs-6 justify-content-end">
+                                    {{ item.get_current_price }} {% trans '$' %}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- DISCOUNT -->
+
+        <!--  SHOPS -->
+        <div class="col  col-3-sm-12  mb-3">
+            <div id="carouselExampleSlidesOnly_4" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <a class="text-decoration-none" href="{% url 'app_shop:shop_list' %}">
+                        <div class="text-light text-center bg-dark text-light fs-4 p-2 fw-bolder rounded ">
+                            {% trans 'OUR SHOPS' %}
+                        </div>
+                    </a>
+                    {% for shop in shops|slice:'1' %}
+                    <div class="carousel-item active bg-body p-2 rounded">
+                        <a class="text-decoration-none text-dark"
+                           href="{% url 'app_shop:shop_detail' slug=shop.slug %}">
+                            <div class="row ">
+                                <div class="col col-12 ">
+                                    <img class="card-img-top"
+                                         src="{% if shop.image %} {{ shop.image.url }}
+                                             {% else %}{% static 'img/default_shop.jpg' %}  {% endif %}"
+                                         width="150" height="200" alt="image">
+                                </div>
+                                <div class="col col-12 d-flex fw-bold justify-content-start">{{ shop.name }}</div>
+                                <div class="col col-12 d-flex justify-content-start">
+                                    {{ shop.description|truncatechars:10 }}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                    {% for shop in shops|slice:'2:5' %}
+                    <div class="carousel-item bg-body p-2 rounded">
+                        <a class="text-decoration-none text-dark"
+                           href="{% url 'app_shop:shop_detail' slug=shop.slug %}">
+                            <div class="row">
+                                <div class="col col-12 ">
+                                    <img class="card-img-top"
+                                         src="{% if shop.image %} {{ shop.image.url }}
+                                             {% else %}{% static 'img/default_ship.jpg' %}  {% endif %}"
+                                         width="150" height="200" alt="image">
+                                </div>
+                                <div class="col col-12 d-flex fs-5 fw-bold justify-content-start">{{ shop.name }}</div>
+                                <div class="col col-12 d-flex justify-content-start">
+                                    {{ shop.description|truncatechars:10 }}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+        <!-- SHOPS -->
+
+        <!-- NEW ITEMS  -->
+        <div class="col  col-3-sm-12  mb-3">
+            <div id="carouselExampleSlidesOnly_2" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <a class="text-decoration-none" href="{% url 'app_shop:new_item' %}">
+                        <div class="text-light text-center bg-success fs-4 p-2 fw-bolder rounded h-100 ">
+                            {% trans 'NEW ITEMS' %}
+                        </div>
+                    </a>
+                    {% for item in new_items|slice:'1' %}
+                    <div class="carousel-item active bg-body p-2 rounded">
+                        <a class="text-decoration-none text-dark"
+                           href="{% url 'app_shop:item_detail' pk=item.pk shop_slug=item.shop.slug %}">
+                            <div class="row ">
+                                <div class="col col-12 ">
+                                    <img class="card-img-top"
+                                         src="{% if item.image %} {{ item.image.url }}
+                                             {% else %}{% static 'img/default_item.jpg' %}  {% endif %}"
+                                         width="150" height="200" alt="image">
+                                </div>
+                                <div class="col col-12 d-flex justify-content-start">{{ item.name }}</div>
+                                <div class="col col-12 fw-bold fs-6 d-flex justify-content-end align-self-end">
+                                    {{ item.get_current_price }} {% trans '$' %}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                    {% for item in new_items|slice:'2:5' %}
+                    <div class="carousel-item bg-body p-2 rounded">
+                        <a class="text-decoration-none text-dark"
+                           href="{% url 'app_shop:item_detail' pk=item.pk shop_slug=item.shop.slug %}">
+                            <div class="row ">
+                                <div class="col col-12 ">
+                                    <img class="card-img-top"
+                                         src="{% if item.image %} {{ item.image.url }}
+                                             {% else %}{% static 'img/default_item.jpg' %}  {% endif %}"
+                                         width="150" height="200" alt="image">
+                                </div>
+                                <div class="col col-12 d-flex justify-content-start">
+                                    {{ item.name }}
+                                </div>
+                                <div class="col col-12 fw-bold fs-6 d-flex justify-content-end align-self-end">
+                                    {{ item.get_current_price }} {% trans '$' %}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- NEW ITEMS       -->
+
+        <!-- TOP SALE       -->
+        <div class="col  col-3-sm-12  mb-3">
+            <div id="carouselExampleSlidesOnly_3" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <a class="text-decoration-none" href="{% url 'app_shop:top_sale' %}">
+                        <div class=" text-light text-center fs-4 p-2 fw-bolder bg-warning rounded">
+                            {% trans 'TOP SALE' %}
+                        </div>
+                    </a>
+                    {% for top in top_sale_items|slice:'1' %}
+                    <div class="carousel-item active bg-body p-2 rounded">
+                        <a class="text-decoration-none text-dark"
+                           href="{% url 'app_shop:item_detail' shop_slug=top.item.shop.slug pk=top.item.pk %}">
+                            <div class="row ">
+                                <div class="col col-12 ">
+                                    <img class="card-img-top"
+                                         src="{% if top.item.image %} {{ top.item.image.url }}
+                                             {% else %}{% static 'img/default_item.jpg' %}  {% endif %}"
+                                         width="150" height="200" alt="image">
+                                </div>
+                                <div class="col col-12 d-flex justify-content-start">{{ top.item.name }}</div>
+                                <div class="col col-6 fw-bold  fs-6 d-flex justify-content-end align-self-end">
+                                    {{ top.item.get_current_price }} {% trans '$' %}
+                                </div>
+                                <div class="col col-6 d-flex justify-content-start bg-warning rounded ">
+                                    {{top.quantity}} {% trans 'bought'%}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                    {% for top in top_sale_items|slice:'2:5' %}
+                    <div class="carousel-item bg-body p-2 rounded">
+                        <a class="text-decoration-none text-dark"
+                           href="{% url 'app_shop:item_detail' shop_slug=top.item.shop.slug pk=top.item.pk %}">
+                            <div class="row ">
+                                <div class="col col-12 ">
+                                    <img class="card-img-top"
+                                         src="{% if top.item.image %} {{ top.item.image.url }}
+                                             {% else %}{% static 'img/default_item.jpg' %}  {% endif %}"
+                                         width="150" height="200" alt="image">
+                                </div>
+                                <div class="col col-12 d-flex justify-content-start">{{ top.item.name }}</div>
+                                <div class="col col-6 fw-bold  fs-6 d-flex justify-content-end align-self-end">
+                                    {{ top.item.get_current_price }} {% trans '$' %}
+                                </div>
+                                <div class="col col-6 d-flex justify-content-start bg-warning rounded ">
+                                    {{ top.quantity }} {% trans 'bought'%}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- TOP SALE-->
+
+    </div>
+</div>
+{% endblock %}

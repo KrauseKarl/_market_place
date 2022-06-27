@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% load cache %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block title %}{% trans 'Personal page' %} {{ user.get_full_name}}{% endblock title %}
+
+{% block content %}
+
+<div class="container text-light">
+    <div class="d-flex bd-highlight  rounded">
+        <!--PROFILE-->
+        <div class="p-3 m-2 bg-light rounded-4 d-flex w-25">
+            <div class="d-flex flex-column">
+
+                <div class="row text-light d-flex justify-content-center">
+                    <!--DISCOUNT CAROUSEL -->
+                    <div class="col col-lg-12">
+                        <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner bg-light shadow-lg  rounded ">
+                                <!--    FIRST SLIDE      -->
+                                {% for item in discount_items|slice:'1' %}
+                                <div class="carousel-item active p-2" style="width:15rem; height:19rem">
+                                    <a class="text-decoration-none text-dark"
+                                       href="{% url 'app_shop:item_detail' pk=item.pk shop_slug=item.shop.slug %}">
+                                        <div class="row d-flex justify-content-center align-self-center">
+                                            <div class="col col-12  bg-danger">
+                                                <div class="text-light fw-bold fs-3"> {% if item.discount %}
+                                                    SALE - {{ item.discount }} % {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col col-12">
+                                                <img  style="width:10rem; height:9rem" class="card-img-top" src="{% if item.image %} {{ item.image.url }}
+                                             {% else %}{% static 'img/default_item.jpg' %}  {% endif %}"
+                                                     height="200" alt="image"></div>
+                                            <div class="col col-12 d-flex justify-content-start">
+                                                {{ item.name }}
+                                            </div>
+                                            <div class="col col-12 fw-lighter text-muted d-flex justify-content-start">
+                                                {{ item.shop }}
+                                            </div>
+                                            <div class="col col-12 fw-lighter d-flex justify-content-end me-5
+                                                        text-decoration-line-through">{{ item.price }} {% trans '$' %}
+                                            </div>
+                                            <div class="col col-12 fw-bold fs-4 d-flex justify-content-end">
+                                                {{ item.get_current_price }} {% trans '$' %}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                {% endfor %}
+                                <!-- REST SLIDES -->
+                                {% for item in discount_items|slice:'2:10' %}
+                                <div class="carousel-item p-2" style="width:15rem; height:19rem">
+                                    <a class="text-decoration-none text-dark"
+                                       href="{% url 'app_shop:item_detail' pk=item.pk shop_slug=item.shop.slug %}">
+                                        <div class="row d-flex justify-content-center align-self-center">
+                                            <div class="col col-12  bg-danger">
+                                                <div class="text-light fw-bold fs-3"> {% if item.discount %}
+                                                    SALE - {{ item.discount }} % {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col col-12">
+                                                <img style="width:10rem; height:9rem"  class="card-img-top" src="{% if item.image %} {{ item.image.url }}
+                                             {% else %}{% static 'img/default_item.jpg' %}  {% endif %}"
+                                                     alt="image"></div>
+                                            <div class="col col-12 d-flex justify-content-start">
+                                                {{ item.name }}
+                                            </div>
+                                            <div class="col col-12 fw-lighter text-muted d-flex justify-content-start">
+                                                {{ item.shop }}
+                                            </div>
+                                            <div class="col col-12 fw-lighter d-flex justify-content-end me-5
+                                                        text-decoration-line-through">{{ item.price }} {% trans '$' %}
+                                            </div>
+                                            <div class="col col-12 fw-bold fs-4 d-flex justify-content-end">
+                                                {{ item.get_current_price }} {% trans '$' %}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <!--DISCOUNT CAROUSEL -->
+                     {% cache  60 profile request.user.profile %}
+                    <div class="row  rounded-5  my-1 text-dark d-flex justify-content-center align-items-center">
+                        <div class="col col-lg-12    my-1  d-flex justify-content-center align-items-center">
+                            <img class="rounded-circle p-1 shadow w-75"
+                                 src="{% if request.user.profile.avatar %}{{ request.user.profile.avatar.url }}
+                                    {% else %} {% static 'img/default_profile.jpg' %} {% endif %}" width="100" alt="photo">
+                        </div>
+                        <div class="col col-lg-12    d-flex justify-content-center">
+                            <a class="btn m-2 btn-sm "
+                               href="{% url 'app_users:profile_edit'  pk=request.user.profile.pk %}">
+                                {% trans 'edit profile' %}
+                            </a>
+                        </div>
+                        <div class="col col-lg-12     fs-4 fw-bold d-flex justify-content-center">
+                            {{ user.get_full_name}}
+                        </div>
+                        <div class="col col-lg-12   fs-6 ">{% trans 'status' %}</div>
+                        <div class="col col-lg-12    my-1 ">
+                            <a class="text-decoration-none" href="{% url 'app_users:loyalty_program' %}">
+                                <b class="d-flex fs-4 fw-bold shadow rounded justify-content-center align-items-center
+                                    {% if user.profile.status == 'ext' %} btn btn-danger
+                                    {% elif user.profile.status == 'adv'%} btn btn-success
+                                    {% else %} btn btn-primary
+                                    {% endif %}">
+                                    {{ user.profile.get_status_display }}
+                                </b>
+                            </a>
+                        </div>
+                        <div class="col col-lg-12    my-1 fs-6 ">{% trans 'balance' %}</div>
+                        <div class="col col-lg-12    my-1 fw-bold fs-2  d-flex justify-content-center align-items-center">
+                            {{ user.profile.balance }} {% trans '$' %}
+                        </div>
+                        <div class="col col-lg-12    my-1 d-flex justify-content-center align-items-center ">
+                            <a href="{% url 'app_users:recharge_balance' pk=request.user.profile.pk %}"
+                               class="btn btn-warning btn-lg shadow">
+                                {% trans 'Recharge balance' %}</a></div>
+                    </div>
+                    {% endcache %}
+                </div>
+
+            </div>
+        </div>
+        <div class="p-3 m-2 bg-light text-dark rounded-4 w-75">
+            <div class="row ">
+                <!-- PROFILE  END -->
+
+                <!--  ALL RECOMMEND ITEMS      -->
+                {% if offer %}
+                <div class="col col-lg-12 p-2 rounded">
+                    <h5 class="text-end fw-bold">{% trans 'Recommend you' %}</h5>
+                    <div class="col col-lg-12">
+                        <div class="row d-flex justify-content-evenly">
+                            {% for item in offer %}
+                            <div class="col col-lg-2 m-2 bg-light shadow rounded">
+                                <a href="{% url 'app_shop:item_detail' pk=item.pk shop_slug=item.shop.slug %}"
+                                   class="text-decoration-none text-dark">
+                                    <img class="card-img-top"
+                                         src="{% if item.image %} {{ item.image.url }}
+                                             {% else %}{% static 'img/default_item.jpg' %}{% endif %}"
+                                         height="100" alt="image"><br>
+                                    {{item.name}}<br>
+                                    "{{item.shop.name|truncatechars:10}}"<br>
+                                    <b class="d-flex justify-content-end">
+                                        {% if request.LANGUAGE_CODE == 'ru' %}
+                                        {{ item.get_price_rub }} ₽
+                                        {% else %}
+                                        {{ item.get_current_price }} $
+                                        {% endif %}</b>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <!--  ALL RECOMMEND ITEMS  -->
+                <!--    UPGRADE-LEVEL-LOYALTY COUNTER   -->
+                {% if total_sum.need_sum_to_update %}
+                <div class="col col-lg-12 fw-bold text-dark fs-6 bg-warning rounded d-flex justify-content-around align-items-center">
+                    {% trans 'buy more goods for' %}
+                    <b class="bg-danger text-light shadow rounded p-1">+ {{ total_sum.need_sum_to_update }} {% trans '$' %}</b>
+                    {% trans 'to update your loyalty status to' %}
+                    <a href="{% url 'app_users:loyalty_program' %}">{% if user.profile.status == 'bgn' %}
+                        <b class="btn btn-success fw-bold  shadow rounded p-1">{% trans 'Advanced' %}</b>
+                        {% elif user.profile.status == 'adv' %}
+                        <b class="btn btn-danger fw-bold  rounded">{% trans 'Expert' %}</b>
+                        {% endif %}</a>
+                </div>
+                {% endif %}
+                <!--    UPGRADE-LEVEL-LOYALTY COUNTER   -->
+
+                <!-- TOTAL SUM PURCHASES & TOTAL QUANTITY  PURCHASES-->
+                <div class="col col-lg-12 fs-6  p-1 d-flex justify-content-evenly align-items-center">
+                        <div class="col col-lg-3 ">{% trans 'Total sum of purchases' %}</div>
+                        <div class="col col-lg-2  fw-bold">
+                            {% if total_sum.sum %}{{ total_sum.sum }} {% else %} 0.00 {% endif %} {% trans '$' %}
+                        </div>
+                        <div class="col col-lg-3 ">{% trans 'Quantity of your purchases' %}</div>
+                        <div class="col col-lg-2 fs-4 fw-bold">
+                            {% if total_quantity %} {{ total_quantity }} {% else %} 0 {% endif %}
+                        </div>
+
+                </div>
+                <!-- TOTAL SUM PURCHASES & TOTAL QUANTITY  PURCHASES-->
+                <div class="col col-lg-12 m-3 ">
+
+                </div>
+                <!--PAGINATION-->
+                <div class="container">
+                    {% block pagination %}
+                    {% include 'pagination.html' %}
+                    {% endblock %}
+                </div>
+                <!-- PAGINATION END-->
+
+                <!-- PURCHASE STORIES     -->
+                <!-- CACHE PURCHASE STORY -->
+                {% cache 60 order_story request.user.profile %}
+                <div class="col col-lg-12  d-flex justify-content-evenly align-items-center ">
+                    {% if orders %}
+                    <table class="bg-body rounded w-100" cellspacing="9">
+                        <thead>
+                        <tr class="fs-6 p-3 text-center shadow rounded">
+                            <th class="py-1"></th>
+                            <th class="py-1">{% trans 'order' %}</th>
+                            <th class="py-1">{% trans 'date' %}</th>
+                            <th class="py-1">{% trans 'quantity' %}</th>
+                            <th class="py-1">{% trans 'sum' %}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for order in orders %}
+                        <tr class="fs-6  text-center">
+                            <td class="py-1">{{ forloop.counter }}</td>
+                            <td class="py-1">
+                                <a class="btn "
+                                   href="{% url 'app_order:order_detail' pk=order.pk %}">
+                                    {{ order }}</a></td>
+                            <td class="py-1">{{ order.created|date:"m D y" }}</td>
+                            <td class="py-1">{{ order.get_total_quantity }}</td>
+                            <td class="py-1">{{ order.get_total_cost}} {% trans '$' %}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="text-center m-3  fs-2">
+                        Oops, not yet anything ...
+                        <a class="btn btn-warning" href="{% url 'app_shop:top_sale'%}">Let's go for shopping</a>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endcache %}
+                <!-- CACHE PURCHASE STORY -->
+                <!-- PURCHASE STORIES     -->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

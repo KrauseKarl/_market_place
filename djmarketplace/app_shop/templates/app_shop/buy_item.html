@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block title %} {% trans 'New items' %} {% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row d-flex justify-content-center">
+        <div style="width:20rem; height:20rem"
+             class="col col-4 bg-light shadow rounded m-2 p-3 d-flex justify-content-center align-items-center">
+            <img class="card-img-top"
+                 src="{% if item.image %}{{ item.image.url }}
+                      {% else %}{% static 'img/default_item.jpg' %}
+                      {% endif %}" style="width:18rem; height:15rem">
+        </div>
+        <div style="width:20rem; height:20rem" class="col col-6 bg-light shadow rounded m-2 p-3">
+            <div class="row d-flex justify-content-between  align-items-center">
+                {% if item.stock < 1 %}
+                <div class="col col-12 ">
+                    <h3>{% trans 'sorry, this item is out of sale'%}</h3>
+                    <a href="{% url 'app_shop:main' %}" class="btn btn-secondary">{% trans 'back to shopping' %}</a>
+                </div>
+                {% else %}
+                <div class="col col-12  d-flex justify-content-end">
+                    {{ item.stock }} {% trans 'available pcs' %}
+                </div>
+                <div class="col col-12  fs-2 fw-bold">{{ item.name }}</div>
+                <div class="col col-12 fs-5">{{ item.description }}</div>
+                <div class="col col-12 fs-5 d-flex ">{{ item.shop}}</div>
+                <div class="col col-12 fs-2 my-3 fw-bold d-flex justify-content-end">
+                    {{ item.get_current_price }} {% trans '$' %}
+                </div>
+            </div>
+            <form  method="post"  action="" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row d-flex justify-content-around">
+                    <div class="col col-6">
+<!--                        <input type="text" class="form-control" name="quantity"-->
+<!--                               value="" placeholder="{% trans 'available' %} {{item.stock}}" aria-label="first_name">-->
+                    </div>
+                    <div class="col col-6 ">
+                        <button class="btn btn-warning w-100" type="submit">{% trans 'buy' %}</button>
+                    </div>
+                </div>
+            </form>
+
+
+            {% endif %}
+        </div>
+        {% if warning_message %}
+        <div class="col col-6  d-flex justify-content-center m-2 p-2 rounded bg-danger text-light text-center">
+            {% if warning_message == 'money' %}
+            <h3>{% trans 'not enough money to byu' %}</h3>
+            {% elif warning_message == 'pcs of item' %}
+            <h3>{% trans 'not enough pcs of item' %}</h3>
+            {% elif warning_message == 'incorrect number' %}
+            <h3>{% trans 'incorrect number, please enter a number' %}</h3>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}

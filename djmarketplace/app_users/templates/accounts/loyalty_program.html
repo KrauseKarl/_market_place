@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% load cache %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block title %}{% trans 'Loyalty program' %} {{ user.get_full_name}}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="d-flex m-1 p-1  fw-bold text-light justify-content-end">{% trans 'Loyalty program' %}</h2>
+    <div class="row d-flex justify-content-around">
+            <div class="card shadow rounded" style="width: 18rem; height: 20rem;">
+                <div class="card-body">
+                     <div class="card-title text-uppercase text-center fs-4 fw-bold p-3">LEVEL</div>
+                    <ul class="list-unstyled">
+                        <li class="p-3  m-2 bg-light rounded text-dark text-center fs-4 fw-bold">SUM TO UPDATE</li>
+                        <li class="p-3  m-2 bg-light rounded text-dark text-center fs-4 fw-bold">DISCOUNT</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card bg-primary rounded text-light  shadow" style="width: 16rem; height: 20rem;">
+                <div class="card-body">
+                    <div class="card-title text-uppercase text-center fs-3 fw-bold p-3">beginner</div>
+                    <ul class="list-unstyled">
+                        <li class="p-3  m-2 bg-light rounded text-dark text-center fs-4 fw-bold">0 $</li>
+                        <li class="p-3  m-2 bg-light rounded text-dark text-center fs-4 fw-bold">0 %</li>
+                    </ul>
+                </div>
+            </div>
+             <div class="card bg-success rounded text-light  shadow" style="width: 17rem; height: 20rem;">
+                <div class="card-body">
+                   <div class="card-title text-uppercase text-center fs-2 fw-bold p-3">advanced</div>
+                    <ul class="list-unstyled">
+                     <li class="p-3  m-2 bg-light rounded text-dark text-center fs-4 fw-bold">5 000 $</li>
+                    <li class="p-3  m-2 bg-light rounded text-dark text-center fs-4 fw-bold">+3 %</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card bg-danger rounded text-light shadow" style="width: 17rem; height: 20rem;">
+                <div class="card-body">
+                    <div class="card-title text-uppercase text-center fs-2 fw-bold p-3">expert</div>
+                    <ul class="list-unstyled">
+                        <li class="p-3  m-2 bg-light rounded text-dark text-center fs-4 fw-bold">10 000 $</li>
+                        <li class="p-3  m-2 bg-light rounded text-dark text-center fs-4 fw-bold">+5 %</li>
+                    </ul>
+                </div>
+            </div>
+    </div>
+</div>
+
+{% endblock content %}

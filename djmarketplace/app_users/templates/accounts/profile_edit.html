@@ -1,0 +1,46 @@
+{% extends "templates/base.html" %}
+{% load i18n %}
+{% load static %}
+{% block title %}  {% trans 'Edit profile' %} {% endblock %}
+
+{% block content %}
+
+<form method="post" action="" enctype="multipart/form-data">
+
+    {% csrf_token %}
+    <div class="container vh-100">
+        <div class="row mt-5 d-flex justify-content-center">
+            <div class="col-2 bg-light rounded-4 p-3 m-2">
+                <img class="rounded-circle m-2 p-1 shadow"
+                     src="{% if request.user.profile.avatar %}{{ request.user.profile.avatar.url }}
+                    {% else %} {% static 'img/default_profile.jpg' %} {% endif %}" width="120" alt="photo">
+                <div class="row my-2 ">
+                    <div class="col col-lg-12  d-flex justify-content-center">
+                        <b class="mx-2">{{ user.first_name}} {{ user.last_name}}</b>
+                    </div>
+                    <div class="col col-lg-12  d-flex justify-content-center">
+                        <b>{{ user.profile.get_status_display }}</b>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-5 bg-light rounded-4 p-3 m-2">
+                <ul>
+                    <input type="text" class="form-control my-2" name="first_name"
+                           value="{{ request.user.first_name }}" aria-label="first_name">
+                    <input type="text" class="form-control my-2" name="last_name"
+                           value="{{ request.user.last_name }}" aria-label="last_name">
+                    <div class="input-group">
+                        <div class="input-group-text">{% trans 'choose avatar' %}</div>
+                        <input type="file" class="form-control" name="avatar"
+                               value="{{ request.profile.user.avatar }}" aria-label="avatar"></div>
+                    <div class="d-grid mt-3">
+                        <button class="btn btn-primary btn-blog" type="submit">{% trans 'Save' %}</button>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% endblock %}

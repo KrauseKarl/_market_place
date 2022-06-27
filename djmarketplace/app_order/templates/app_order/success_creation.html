@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load cache %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block title %}Thank you{% endblock %}
+
+{% block content %}
+<div class="container bg-light text-center rounded p-3 my-3 w-70">
+    <h1>Successful payment</h1>
+    <div class="m-3 fs-5">Thank you, <b>{{request.user.get_full_name }}</b></div>
+    <div class="m-3 fs-5">your order number is <strong>{{ order.id }}</strong> has been successfully completed.</div>
+    <a class="btn btn-success w-20 p-2 m-2" href="{% url 'app_users:profile' pk=request.user.profile.pk %}">go to my profile</a>
+    <a class="btn btn-warning w-20 p-2 m-2" href="{% url 'app_shop:main' %}">Continue shopping</a>
+</div>
+{% endblock %}

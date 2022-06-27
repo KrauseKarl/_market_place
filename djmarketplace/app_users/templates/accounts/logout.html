@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %} {% trans 'Log out of your account' %}{% endblock %}
+
+{% block content %}
+<div align="center" style="margin: 150px">
+    <h2 class="fw-bold fs-3 text-light">
+        {% trans 'You have successfully logged out' %}
+        <a class="btn btn-secondary w-50 my-3 p-3" aria-current="page" href="{% url 'app_users:login' %}">
+        {% trans 'login' %}
+    </a>
+    </h2>
+</div>
+{% endblock  %}

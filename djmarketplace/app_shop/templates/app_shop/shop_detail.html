@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %} {% trans 'shops list' %} {% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row mt-5">
+        <div class="col col-9">
+            <div class="row d-flex justify-content-start">
+                {% for item in page_obj %}
+                <div class="col col-3  rounded shadow p-3 m-1  bg-body rounded" style="width: 15rem; height: 20rem;">
+                    <a href="{% url 'app_shop:item_detail' shop_slug=shop.slug pk=item.pk  %}"
+                       class="text-decoration-none text-dark">
+                            <img class="card-img-top" style="width: 10rem; height: 10rem;"
+                             src="{% if item.image %}{{ item.image.url }}
+                            {% else %}{% static 'img/default_item.jpg' %}{% endif %}">
+                        <h5 class="d-flex justify-content-start fw-bold text-uppercase">{{ item.name }}</h5>
+                        <p lass="d-flex justify-content-start" style="height: 1rem;">{{item.description|truncatechars:20 }}</p>
+                        {% if item.is_stock %}
+                        <div class="fw-bold fs-4 d-flex justify-content-end align-items-end">
+                            {{ item.get_current_price }} {% trans '$' %}
+                        </div>
+                        {% else %}
+                        <h6 class="fw-bold fs-5 d-flex justify-content-end ">{% trans 'OUT OF STOCK'%}</h6>
+                        {% endif %}
+                    </a>
+                </div>
+                {% empty %}
+                <h4>no items in this shop </h4>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col col-3 ">
+            <div class="row bg-body p-2 rounded">
+                <div class="col col-12 d-flex justify-content-end">
+                    <img class="card-img-top" src="{% if shop.image %}{{ shop.image.url }}
+                    {% else %}{% static 'img/default_shop.jpeg' %}
+                    {% endif %}" width="200" height="250" >
+                </div>
+                 <div class="col col-12 fs-5 d-flex justify-content-start align-items-center">
+                     <img class=" rounded m-2" src="{{shop.category.icon.url}}" width="30" height="30">
+                     {{ shop.category }}
+                 </div>
+                <div class="col col-12 fs-3 d-flex justify-content-end">{{ shop.name }}</div>
+                <div class="col col-12 d-flex justify-content-end">{{ shop.description }}</div>
+            </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+
+{% endblock content %}

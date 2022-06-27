@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans 'Top sale' %}{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row ">
+      <h2 class="d-flex m-1 p-1  fw-bold text-light justify-content-end">{% trans 'Top sale' %}</h2>
+        <div class="col col-12">
+            <div class="row d-flex justify-content-evenly">
+                {% for top in tops %}
+                <div class="col col-2 m-1 shadow rounded bg-light" style="width: 13rem; height:17rem">
+                    <a class="text-decoration-none text-dark"
+                       href="{% url 'app_shop:item_detail' shop_slug=top.item.shop.slug pk=top.item.pk %}">
+                        <div class="row ">
+                            <div class="col col-12  fs-3 bg-warning  rounded mt-2 ms-2">
+                                {{top.quantity}} {% trans 'bought'%}
+                            </div>
+                            <div class="col col-7 ">
+                                <img class="m-2 rounded shadow d-flex justify-content-center align-self-center"
+                                     src="{% if top.item.image %} {{ top.item.image.url }}
+                                             {% else %}{% static 'img/default_item.jpg' %}  {% endif %}"
+                                     width="80" height="80"  alt="image">
+                            </div>
+
+                            <div class="col col-12 d-flex justify-content-start">{{ top.item.name }}</div>
+                            <div class="col col-12 fw-lighter text-muted d-flex justify-content-end">
+                                {{ top.item.shop }}
+                            </div>
+                            {% if item.discount %}
+                            <div class="col col-12 fw-lighter d-flex justify-content-start align-self-end
+                                        text-decoration-line-through">{{ top.item.price }} {% trans '$' %}</div>
+                            <div class="col col-12 d-flex fw-bold fs-6 justify-content-end align-self-end">
+                                {{ top.item.get_sale_price }} {% trans '$' %}</div>
+                            {% else %}
+                            <div class="col col-12 fw-bold  fs-6 d-flex justify-content-end align-self-end">
+                                {{top.item.price}} {% trans '$' %}</div>
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

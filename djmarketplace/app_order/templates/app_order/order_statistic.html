@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load cache %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block title %} {% trans 'Statistic' %} {% endblock %}
+
+{% block content %}
+<div class="container vh-100">
+    <div class="row">
+        <h2 class=" mx-3 p-3  text-light fw-bold d-flex justify-content-end">
+            {% if date %}{% trans 'Statistic from' %} {{date.start|date:"d/m/y"}} to {{date.finish|date:"d/m/y"}}
+            {% else %}{% trans 'Statistic from' %}{% endif %}
+        </h2>
+        <!-- DATE FORM       -->
+        <div class="col col-lg-sm-12">
+            <form method="post" class="form-control bg-secondary p-3 d-flex justify-content-end">
+                {% csrf_token %}
+                <label for="start"class="fs-4 fw-bold text-light">{% trans 'from' %}</label>
+                <input id="start" class="mx-2" type="date" name="start" >
+                <label for="start" class="fs-4 fw-bold text-light">{% trans 'to' %}</label>
+                <input id="finish" class="mx-2" type="date" name="finish">
+                <button class="btn btn-warning  px-5 " type="submit">check</button>
+            </form>
+        </div>
+        <!-- DATE FORM       -->
+        <!--  TABLE  + SERVICE MESSAGE -->
+        <div class="col col-lg-sm-12">
+            <!--  ERROR MESSAGE -->
+            {% if message %}
+            <div class="bg-danger rounded fs-3 p-1  fw-bold text-center text-light ">
+                {% trans 'Incorrect period' %}
+            </div>
+            {% endif %}
+            <!--  ERROR MESSAGE -->
+
+            <!-- TABLE  -->
+            {% if others %}
+            <table class="bg-secondary text-light rounded w-100" cellspacing="7">
+                <thead>
+                <tr class="fs-5 ">
+                    <th class="p-4">{% trans 'id' %}</th>
+                    <th class="p-4">{% trans 'item' %}</th>
+                    <th class="p-4">{% trans 'quantity' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for i in others %}
+                <tr class="fs-4 p-2 shadow rounded">
+                    <td class="p-1">{{ i.product__id}}</td>
+                    <td class="p-1">{{ i.product__name }}</td>
+                    <td class="p-1">{{ i.quantity__sum }}</td>
+                    <td class="p-1">{{ i.order__created}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <!-- TABLE  -->
+
+            <!--    CHOOSE DATE MESSAGE  -->
+            {% if nothing %}
+            <div class="text-center m-3 text-light fw-bold fs-3">{% trans 'Choose period' %}</div>
+            <!--    CHOOSE DATE MESSAGE  -->
+
+            <!--    EMPTY QUERYSET -->
+            {% else %}
+            <div class="text-center bg-warning m-3 rounded p-2 fs-5">
+                {% trans 'We can not find any info within this period' %}
+            </div>
+            {% endif %}
+            <!--    EMPTY QUERYSET -->
+            {% endif %}
+        </div>
+        <!--  TABLE  + SERVICE MESSAGE -->
+
+
+    </div>
+</div>
+
+
+{% endblock %}

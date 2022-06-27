@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans 'shops list' %}{% endblock title %}
+
+{% block content %}
+<div class="container">
+    <div class="row ">
+    <h2 class="d-flex m-1 p-1  fw-bold text-light justify-content-end">
+        {% if category %}{{category.name}}<img class=" rounded m-2" src="{{category.icon.url}}" width="30" height="30">{%else%}{% trans 'All shops' %}{%endif%}</h2>
+        <div class="col col-3 rounded">
+            <ul class="list-unstyled">
+                <li>
+                    <a class="btn btn-light d-flex justify-content-end m-2"
+                       href="{% url 'app_shop:shop_list' %}">All</a>
+                </li>
+                {% for c in categories %}
+                <li>
+                    <a class="btn btn-light d-flex justify-content-end m-2"
+                       href="{% url 'app_shop:shop_list_category' slug=c.slug %}">
+                       [{{c.shops__count}}] {{ c.name }}<img class="m-1" src="{{c.icon.url}}" width="18" height="18"></a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col col-9">
+            <div class="row d-flex justify-content-about align-items-center">
+                {% for shop in page_obj %}
+                <div class="col col-lg-2 d-flex justify-content-center rounded shadow m-1 bg-body rounded"
+                     style="width: 12rem; height: 16rem;">
+                    <a href="{{ shop.get_absolute_url }}" class="p-2 text-decoration-none text-dark">
+                        <img src="{% if shop.image %}{{ shop.image.url }}{% else %}{% static 'img/default_shop.jpg' %}
+                    {% endif %}" class="" style="width: 11rem; height: 9rem;">
+                        <div class="d-block justify-content-end mt-3">
+                            <div class="fs-6 fw-bold">{{ shop.name }}</div>
+                            <small class="text-muted fs-6 text-truncate">{{shop.category|truncatechars:10 }}</small>
+                            <small class="text-muted text-truncate">{{shop.description|truncatechars:20 }}</small>
+                        </div>
+                    </a>
+                </div>
+                {% empty %}
+                <div class="text-light text-center fs-1 fw-bold m-3 p-4">
+                    {% trans 'Sorry, there is no any shop' %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "templates/base.html" %}
+{% load i18n %}
+{% block title %}  {% trans 'Recharge balance' %} {% endblock %}
+
+{% block content %}
+
+<div class="container w-25 vh-100 ">
+    <h2 class="d-flex m-1 p-1  fw-bold text-light justify-content-end">{% trans 'Recharge balance' %}</h2>
+    <form method="post" action="" enctype="multipart/form-data"> {% csrf_token %}
+        <div class="row mt-5 bg-light rounded-5">
+            <div class="col col-12  p-3 d-flex   justify-content-center align-items-center">
+                <img class="rounded-circle  shadow border border-5
+                     {% if user.profile.status == 'ext'%} border-danger
+                     {% elif user.profile.status == 'adv' %} border-success
+                     {% else %} border-primary
+                     {% endif %}"
+                     src="{% if request.user.profile.avatar %}{{ request.user.profile.avatar.url }}
+                    {% else %} 'static/img/default_profile.jpg {% endif %}" width="120" alt="photo">
+                <div class="row">
+                    <div class="col col-12 p-1  d-flex justify-content-center">
+                        <b class="mx-2">{{ user.get_full_name}}</b>
+                    </div>
+                    <div class="col col-12 p-1 fs-5 fw-bold
+                     {% if user.profile.status == 'ext'%} text-danger
+                     {% elif user.profile.status == 'adv' %} text-success
+                     {% else %} text-primary
+                     {% endif %} d-flex justify-content-center">
+                        {{ user.profile.get_status_display }}
+                    </div>
+                    <div class="col col-12 p-1  d-flex justify-content-center">
+                        <b>{{ user.profile.balance }} {% trans '$' %}</b>
+                    </div>
+                </div>
+            </div>
+            <div class="col col-12 d-flex p-3  justify-content-center align-items-center">
+                <div class="input-group">
+                    <input id="recharge_balance" class="form-control" name="balance" placeholder="Введите сумму" >
+                </div>
+            </div>
+            <div class="col col-12 d-flex p-3  justify-content-end align-items-center">
+                <button for="recharge_balance" class="btn btn-warning w-100 p-2" type="submit">{% trans 'Recharge balance' %}</button>
+
+            </div>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block title %} {{item.category}}/{{ item.name }} {% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row d-flex justify-content-center">
+        <div style="width:29rem; height:25rem"
+             class="col col-4 bg-light shadow rounded m-2 p-3 d-flex justify-content-center align-items-center">
+
+            <img class="card-img-top" style="width:15rem; height:15rem"
+                 src="{% if item.image %} {{ item.image.url }}
+                    {% else %}{% static 'img/default_item.jpg' %} {% endif %}">
+        </div>
+        <div style="width:29rem; height:25rem" class="col col-6 bg-light shadow rounded m-2 p-3">
+            <div class="row ">
+
+                <div class="col col-12  fs-2 fw-bold ">{{ item.name }}</div>
+                <div class="col col-12 fs-5 ">{{item.description|truncatechars:20 }}</div>
+                <div class="col col-12 fs-5  ">
+                    <a href="{{ item.shop.get_absolute_url }}" class="text-decoration-none text-dark">
+                        {{ item.shop }}
+                    </a>
+                </div>
+                <div class="col col-12  mb-3 fs-3 fw-bold d-flex justify-content-end align-items-center">
+                    {{ item.get_current_price }} {% trans '$' %}
+                </div>
+                <!--  ADD TO CARD-->
+                {% if item.is_stock %}
+                {% if request.user.is_authenticated %}
+                <div class="col col-12 mt-2">
+                    <form id="add_item" action="." method="post" class="form-control-lg p-3">
+                        {% csrf_token %}
+                        {{ form.quantity }}
+                        <small class="text-muted fs-6 fw-light">{{ item.stock }} {% trans 'available pcs'%}</small>
+                        {{ form.update }}
+                        <button class="btn btn-success m-1 w-50 fw-bold fs-5" form="add_item"
+                                formaction="{% url 'app_cart:add' pk=item.id %}" type="submit">
+                            Add to cart
+                        </button>
+                    </form>
+                </div>
+
+                <!--  SERVICE MESSAGE -->
+                <div class="col col-12 mt-1">
+                    <!--   SUCCESS ADDED MESSAGE  -->
+                    {% if message == 'successful added to cart' %}
+                    <div class="bg-success rounded text-light fs-6 fw-bold p-2 m-1">
+                            {% trans 'successful added to cart' %}
+
+                            <!--  BUTTON "GO TO THE CART" -->
+                            <a href="{% url 'app_cart:detail_cart' %}" class="btn btn-warning fw-bold w-100 p-1">
+                                {% trans 'go to cart'%}
+                            </a>
+                            <!--  BUTTON "GO TO THE CART" -->
+
+                    </div>
+                     <!--   SUCCESS ADDED MESSAGE  -->
+
+                    <!--   LACK OF ITEM  MESSAGE  -->
+                    {% elif message == 'lack of the product'%}
+                        <div class="bg-danger rounded text-light fs-4 fw-bold p-2 m-1">
+                            {% trans 'lack of the product' %}
+                        </div>
+                    <!--   LACK OF ITEM  MESSAGE  -->
+                    {% endif %}
+                </div>
+                <!--  SERVICE MESSAGE -->
+
+            </div>
+        </div>
+
+
+
+        <!--                    ADD TO CARD END-->
+
+
+        {% else %}
+        <div class="col col-6 fs-4  d-flex justify-content-start align-self-end">
+            <a class="btn btn-dark" href="{% url 'app_users:login' %}">{% trans 'LOG IN to buy'%}</a>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="col col-12 fs-4  d-flex justify-content-end">
+            {% trans 'OUT OF STOCK'%}
+        </div>
+        {% endif %}
+        {% if warning_message %}
+        <div class="col col-12  d-flex justify-content-center mt-4 p-2 rounded bg-danger text-light text-center">
+            {% if warning_message == 'money' %}
+            <h3>{% trans 'not enough money to byu' %}</h3>
+            {% elif warning_message == 'pcs of item' %}
+            <h3>{% trans 'not enough pcs of item' %}</h3>
+            {% elif warning_message == 'incorrect number' %}
+            <h3>{% trans 'incorrect number, please enter a number' %}</h3>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+
+{% endblock content %}
+
+
+<!--  <div class="row">-->
+<!--                                {% for prod in products %}-->
+<!--                                <div class="col col-3">-->
+<!--                                    <a class="text-decoration-none text-dark"-->
+<!--                                       href="{% url 'app_shop:item_detail' shop_slug=prod.shop.slug pk=prod.pk %}">-->
+
+<!--                                        <div class="col col-12 ">-->
+<!--                                            <img class="card-img-top"-->
+<!--                                                 src="{% if prod.image %} {{ prod.image.url }}-->
+<!--                                                 {% else %}{% static 'img/default_item.jpg' %} {% endif %}"-->
+<!--                                                 width="150" height="200" alt="image">-->
+<!--                                        </div>-->
+<!--                                        <div class="col col-12 d-flex justify-content-start">{{ prod.name }}</div>-->
+<!--                                        <div class="col col-12 fw-bold d-flex justify-content-start">-->
+<!--                                            {{ prod.get_current_price }} $-->
+<!--                                        </div>-->
+<!--                                    </a>-->
+<!--                                </div>-->
+<!--                                {% endfor %}-->
+<!--                            </div>-->

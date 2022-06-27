@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans 'Discount list' %}{% endblock title %}
+
+{% block content %}
+
+
+<div class="container">
+    <div class="row">
+           <h2 class="d-flex m-1 p-1  fw-bold text-light justify-content-end">
+                {% if category %}
+                {{category }}
+                {%else%}
+                {% trans 'Best deal' %}
+                {%endif%}
+            </h2>
+            <div class="col col-2 rounded">
+                <ul class="list-unstyled">
+                    <li class="my-2">
+                        <a class="btn btn-light d-flex justify-content-end"
+                           href="{% url 'app_shop:discount' %}">
+                            All</a>
+                    </li>
+                    {% for cat, name in categories.items %}
+                    <li class="mb-2">
+                        <a class="btn btn-light d-flex justify-content-end"
+                           href="{% url 'app_shop:discount_category' slug=cat %}">
+                            {{ name }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col col-10 ">
+                <div class="row d-flex justify-content-start">
+                    {% for item in page_obj %}
+                    <div class="col col-2 m-2 shadow rounded bg-light" style="width: 13rem; height:16rem">
+                        <a class="text-decoration-none text-dark"
+                           href="{% url 'app_shop:item_detail' pk=item.pk shop_slug=item.shop.slug %}">
+                            <div class="row ">
+                                {% if item.discount %}
+                                <div class="col col-12  fs-3 bg-danger text-light rounded mt-2 ms-2">
+                                    SALE - {{ item.discount }} %
+                                </div>
+                                {% endif %}
+                                <div class="col col-12 ">
+                                    <img class="m-2 rounded-circle d-flex justify-content-center align-self-center"
+                                         src="{% if item.image %} {{ item.image.url }}
+                                             {% else %}{% static 'img/default_item.jpg' %}  {% endif %}"
+                                         width="80" alt="image">
+                                </div>
+                                <div class="col col-12 d-flex justify-content-start">
+                                    {{ item.name }}
+                                </div>
+                                <div class="col col-12 fw-lighter text-muted d-flex justify-content-end">
+                                    {{ item.shop }}
+                                </div>
+
+                                {% if item.discount %}
+                                <div class="col col-12 fw-lighter d-flex justify-content-start
+                                                    text-decoration-line-through">
+                                    {{ item.price }} {% trans '$' %}
+                                </div>
+                                <div class="col col-12 d-flex fw-bold fs-6 justify-content-end align-self-end">
+                                    {{ item.get_sale_price }} {% trans '$' %}
+                                </div>
+                                {% else %}
+                                <div class="col col-12 fw-bold fs-6 d-flex justify-content-end align-self-end">
+                                    {{item.price}} {% trans '$' %}
+                                </div>
+                                {% endif %}
+
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% block title %}{% trans 'New items' %}{% endblock title %}
+
+{% block content %}
+
+
+<div class="container">
+    <div class="row">
+        <h2 class="d-flex m-1 p-1  fw-bold text-light justify-content-end">
+            {% if category %}{{category.name}}{%else%}{% trans 'New items' %}{%endif%}
+        </h2>
+        <div class="col col-2 rounded">
+            <ul class="list-unstyled">
+                <li>
+                    <a class="btn btn-light d-block d-flex justify-content-end m-2"
+                       href="{% url 'app_shop:new_item' %}">All</a>
+                </li>
+                {% for c in categories %}
+                <li>
+                    <a class="btn btn-light d-flex justify-content-end m-2"
+                       href="{% url 'app_shop:new_item_category' slug=c.slug %}">
+                        {{ c.name }} [{{c.items__count}}]</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col col-10">
+            <div class="row">
+                <div class="d-flex justify-content-center">
+                    {% block pagination %}
+                    {% include 'pagination.html' %}
+                    {% endblock %}
+                </div>
+                {% for item in page_obj %}
+                <div class="col col-2 m-2 p-3 shadow rounded bg-light" style="width: 12rem; height: 16rem;">
+                    <a class="text-decoration-none text-dark"
+                       href="{% url 'app_shop:item_detail' shop_slug=item.shop.slug pk=item.pk %}">
+                        <div class="row ">
+                            <div class="col col-12 ">
+                                <img class="card-img-top" style="width: 7rem; height: 7rem;"
+                                     src="{% if item.image %} {{ item.image.url }}
+                                             {% else %}{% static 'img/default_item.jpg' %}  {% endif %}"
+                                     width="80" height="80" alt="image">
+                            </div>
+                            <div class="col col-12 d-flex justify-content-start">
+                                {{ item.name }}
+                            </div>
+                            <div class="col col-12 fw-lighter text-muted d-flex justify-content-end">
+                                {{ item.shop }}
+                            </div>
+
+                            {% if item.discount %}
+                            <div class="col col-12 fw-lighter d-flex justify-content-end align-self-end
+                                                    text-decoration-line-through">
+                                {{ item.price }} {% trans '$' %}
+                            </div>
+                            <div class="col col-12 d-flex fw-bold fs-5 justify-content-end align-self-end">
+                                {{ item.get_sale_price }} {% trans '$' %}
+                            </div>
+                            {% else %}
+                            <div class="col col-12 fw-bold  mt-4 fs-5 d-flex justify-content-end align-self-end">
+                                {{item.price}} {% trans '$' %}
+                            </div>
+                            {% endif %}
+
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -26,7 +26,7 @@ urlpatterns = [
     path('', include(('app_shop.urls', 'app_shop'), namespace='app_shop')),
 
     path('i18n', include('django.conf.urls.i18n')),
-    path('__debug__/', include('debug_toolbar.urls')),
+    # path('__debug__/', include('debug_toolbar.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
